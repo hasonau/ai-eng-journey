@@ -19,7 +19,10 @@ for i in range(5):
     response = client.chat.completions.create(
         model=model,
         messages=[{"role": "user", "content": question}],
-        temperature=0
+        temperature=0.3,
+        reasoning_effort="low",
+        max_completion_tokens=400,
+        stop=["machine learning"]
     )
 
     latency = time.perf_counter() - start
@@ -28,7 +31,6 @@ for i in range(5):
     print(f"\n--- Response {i + 1} ---")
     print(response.choices[0].message.content)
 
-    usage = response.usage
 
     if usage is not None:
         print(f"Prompt tokens: {usage.prompt_tokens}")
@@ -37,3 +39,11 @@ for i in range(5):
         print("Latency is : ",latency)
     else:
         print("Token usage information unavailable.")
+
+    message = response.choices[0].message
+
+    print("Content:", repr(message.content))
+    print("Finish reason:", response.choices[0].finish_reason)
+
+    print("Token details:")
+    print(response.usage.model_dump())
