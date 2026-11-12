@@ -10,9 +10,10 @@ load_dotenv(Path(__file__).resolve().parent.parent / ".env")
 
 client = Groq(api_key=os.getenv("GROQ_API_KEY"))
 
+
 model = "openai/gpt-oss-120b"
 question = "Answer to the question i will ask,should be 2 line or 3 ,not more than that.What is the difference between AI and machine learning?"
-
+value =0 
 for i in range(5):
     start = time.perf_counter()
 
