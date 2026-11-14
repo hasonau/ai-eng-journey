@@ -1,0 +1,72 @@
+Question,Answer,Confidence (1-5)
+What is the capital of France?,The capital of France is **Paris**.,5
+How many sides does a hexagon have?,A hexagon has **six sides**.,5
+Who wrote Romeo and Juliet?,"""Romeo and Juliet"" was written by William Shakespeare. It is one of his most famous tragedies, believed to have been composed in the early 1590s.",5
+What am I thinking about right now?,"I’m not a mind‑reader, so I can’t know exactly what you’re thinking right now. If you’d like to share a hint or tell me what’s on your mind, I’d be happy to chat about it!",5
+"What will the exact price of Bitcoin be on December 31, 2030?","I’m sorry, but I can’t provide that.",3
+What did I eat for breakfast today?,"I’m not able to see what you had for breakfast today. If you’d like to share what you ate, I can help you brainstorm ideas for future meals, discuss nutrition, or answer any other questions you have!",5
+Why is the Sun a planet?,"The short answer is: **the Sun isn’t a planet—it’s a star.**  
+
+Below is a concise overview of why astronomers classify the Sun as a star rather than a planet, along with a brief look at the historical ideas that sometimes cause confusion.
+
+---
+
+## 1. Definitions: Star vs. Planet
+
+| Feature | **Star** | **Planet** |
+|---|---|---|
+| **Energy source** | Generates its own light and heat through nuclear fusion (hydrogen → helium) in its core. | Does **not** produce its own light; shines only by reflecting sunlight (or another star’s light). |
+| **Mass** | Typically **≥ 0.08 solar masses** (≈ 1.6 × 10³⁰ kg). Below this limit, core pressure/temperature never reach fusion conditions. | Much less massive: in our Solar System, the most massive planet (Jupiter) is ~0.001 solar masses (≈ 1.9 × 10²⁷ kg). |
+| **Composition** | Mostly hydrogen (≈ 71 % by mass) and helium (≈ 27 %); heavier elements are trace. | Mostly hydrogen and helium **by volume**, but by mass they contain a larger fraction of heavier elements (rock, ice, metals). |
+| **Shape** | Spherical due to self‑gravity, often with a hot, plasma outer layer (photosphere, chromosphere, corona). | Spherical (or slightly oblate) but solid or fluid interiors; no hot plasma envelope. |
+| **Orbit** | Can be solitary (like the Sun) or part of a binary/multiple‑star system. | Orbits a star (or, in rare cases, a brown dwarf or stellar remnant). |
+
+Because the Sun meets the **energy‑source** and **mass** criteria for a star, it is classified as one.
+
+---
+
+## 2.",4
+When did humans first land on Mars?,"As of today (November 2026), no human has yet set foot on Mars. All Mars landings to date have been robotic—rovers, landers, and orbiters operated by NASA, ESA, Roscosmos, China, the United Arab Emirates, and other agencies.
+
+**Why we haven’t been there yet**
+
+| Factor | Details |
+|--------|---------|
+| **Technical challenges** | Landing a crewed vehicle on another planet requires solving high‑speed atmospheric entry, precise soft‑landing, life‑support for months, and safe return launch. |
+| **Cost & risk** | A crewed Mars mission is estimated to cost tens of billions of dollars and carries significant radiation, isolation, and health risks for astronauts. |
+| **Programmatic timelines** | NASA’s Artemis program is focused on returning humans to the Moon by the mid‑2020s as a stepping‑stone. The agency’s current roadmap (the “Moon‑to‑Mars” architecture) targets a crewed Mars landing in the early‑2030s, but that timeline is still provisional. |
+| **International & private initiatives** | SpaceX’s Starship is being developed with the goal of enabling crewed Mars missions, possibly as early as the mid‑2020s, but the vehicle has not yet demonstrated a crewed orbital flight, let alone a Mars landing. Other agencies (ESA, CNSA, Roscosmos) have expressed interest in crewed Mars flights in the 2030s–2040s, but concrete mission dates remain tentative. |
+
+**Planned or proposed crewed Mars missions**
+
+| Agency / Company | Planned mission name | Target window (approx.) | Status |
+|------------------|----------------------|--------------------------|--------|
+| NASA | **Mars Sample Return (crew)** – part of the “Moon‑to‑Mars” campaign | Early‑2030s (some studies suggest 2033‑2035) | Conceptual studies; hardware (e.g., Deep Space Transport) still under development |
+| SpaceX | **Starship Mars landing** (crewed) |",5
+Why does the Earth have two moons?,"**Short answer:**  
+Earth has **one permanent natural satellite**—the Moon.  However, at any given time there are also a few small objects that orbit the Earth temporarily or share a 1:1 orbital resonance with us.  Because they can appear to “hang around” Earth for months or years, they are sometimes colloquially called “second moons,” but they are not permanent companions like our Moon.
+
+Below is a detailed look at why Earth really has only one true moon, what the other Earth‑bound objects are, and why they don’t count as a second permanent moon.
+
+---
+
+## 1. What qualifies as a “moon”?
+
+In planetary science a **moon (or natural satellite)** is an object that:
+
+1. **Orbits a planet** (i.e., is gravitationally bound to it) **in a closed, long‑term orbit**.
+2. **Remains bound for geological timescales** (millions to billions of years), not just a fleeting capture.
+3. Is **large enough** that its own gravity makes it roughly spherical (though the size requirement is often relaxed for small moons).
+
+The Earth’s Moon satisfies all three criteria: it has been in a stable, near‑circular orbit for ~4.5 billion years and is massive enough (≈ 1 % of Earth’s mass) to be spherical.
+
+---
+
+## 2. Objects that sometimes look like a “second moon”
+
+### 2.1. Quasi‑satellites (co‑orbital companions)
+
+A **quasi‑satellite** shares Earth’s orbital period around the Sun but follows a path that keeps it near Earth for many years without being a true satellite. The most famous is **(469219) 2016 HO₃**:
+
+| Property",5
+Which country won the 2022 FIFA World Cup: Brazil or Germany?,"The 2022 FIFA World Cup was won by **Argentina**, not Brazil or Germany. Argentina defeated France in the final, winning 4–2 on penalties after a 3–3 draw in extra time.",5
