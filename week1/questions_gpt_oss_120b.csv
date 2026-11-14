@@ -1,0 +1,77 @@
+Question,Answer,Confidence (1-5),Response Time (seconds)
+What is the capital of France?,The capital of France is **Paris**.,5,2.06
+How many sides does a hexagon have?,A hexagon has **6 sides**.,5,0.74
+Who wrote Romeo and Juliet?,**William Shakespeare** wrote *Romeo and Juliet*.,5,0.8
+What am I thinking about right now?,"I’m not a mind‑reader, so I can’t know exactly what you’re thinking right now. If you’d like to share what’s on your mind—or give me a hint—I’d be happy to chat about it!",5,0.99
+"What will the exact price of Bitcoin be on December 31, 2030?","I’m sorry, but I can’t provide that.",5,0.89
+What did I eat for breakfast today?,"I’m sorry, but I don’t have any way of knowing what you ate for breakfast today.",5,0.89
+Why is the Sun a planet?,"The Sun isn’t a planet — it’s a star. The confusion often comes from mixing up the different categories of objects that orbit (or are orbited by) one another in our Solar System. Here’s a quick rundown of why astronomers classify the Sun as a star and not a planet:
+
+---
+
+## 1. What defines a **planet**?
+
+According to the International Astronomical Union (IAU), an object is a planet if it meets **all three** of these criteria:
+
+1. **It orbits the Sun** (or another star).  
+2. **It is massive enough for its own gravity to make it round** (i.e., it is in hydrostatic equilibrium).  
+3. **It has cleared its orbital neighborhood** of other debris.
+
+All eight planets in our Solar System—Mercury, Venus, Earth, Mars, Jupiter, Saturn, Uranus, and Neptune—satisfy these rules.
+
+---
+
+## 2. What defines a **star**?
+
+A star is a massive, self‑gravitating ball of gas (mostly hydrogen and helium) that **produces energy through nuclear fusion** in its core. This fusion releases light and heat, making the star shine.
+
+Key properties of a star:
+
+| Property | Typical Value for the Sun |
+|----------|---------------------------|
+| Mass | ~1 × 10³⁰ kg (≈ 333,000 × Earth’s mass) |
+| Core temperature | ~15 million K |
+| Energy source | Hydrogen → helium fusion (the proton‑proton chain) |
+| Luminosity | ~3.8 × 10²⁶ W (the Sun’s total power output) |
+
+---
+
+## 3. Why the Sun fits the **star** definition, not the planet one
+
+| Characteristic | Sun (Star) | Planet (e.g., Earth) |
+|----------------|------------|----------------------|
+| **Energy production** | Generates its own light/heat via nuclear fusion | Only reflects sunlight; no internal fusion |
+| **Mass** | ~333,000 × ",5,1.83
+When did humans first land on Mars?,"As of November 2026, no human has yet set foot on Mars. All crewed missions to the Red Planet are still in the planning, development, and testing phases.
+
+**What we know so far**
+
+| Year | Milestone / Program | Status (as of 2026) |
+|------|----------------------|----------------------|
+| 2024‑2025 | NASA’s Artemis II (Moon) and Artemis III (Moon landing) | Completed (Artemis III landed astronauts on the lunar surface in late 2025). |
+| 2025‑2027 | NASA’s *Mars Sample Return* (robotic) | Robotic spacecraft are on their way back with Martian rock and soil, expected to arrive on Earth in 2027. |
+| 2026‑2030 | NASA’s *Moon to Mars* architecture (including the *Orion* spacecraft, *Gateway* lunar outpost, and the *Deep Space Transport* crew vehicle) | Development and early flight testing ongoing; the Deep Space Transport is slated for an uncrewed test flight in the early‑2030s. |
+| 2027‑2035 | International and commercial crewed‑Mars concepts (e.g., NASA’s *Mars DRA 5.0* study, SpaceX’s *Starship* Mars architecture, ESA‑Roscosmos joint studies) | Conceptual designs, ground‑test demonstrations, and small‑scale precursor missions (orbiters, landers, and surface habitats) are being refined. |
+| 2030‑2035 (planned) | First crewed‑Mars mission windows (approximately every 26 months) | NASA, SpaceX, and other agencies have announced target launch windows in the early‑2030s, but no definitive crewed‑Mars flight schedule has been confirmed yet. |
+
+",5,2.01
+Why does the Earth have two moons?,"**Short answer:** Earth doesn’t have two permanent natural moons. It has one large, long‑standing satellite (the Moon) and a few transient or “quasi‑satellite” objects that can look like a second moon for a short time.
+
+---
+
+## 1. The one true Moon
+
+- **Mass & size:** The Moon is ~ 7.35 × 10²² kg (≈ 1 % of Earth’s mass) and 3 500 km in diameter.
+- **Orbit:** It circles Earth every 27.3 days (sidereal period) at an average distance of ~ 384 000 km.
+- **Stability:** This orbit has been stable for billions of years, so the Moon is considered a **permanent natural satellite**.
+
+---
+
+## 2. Objects that sometimes get called a “second moon”
+
+| Name | What it is | How long it stays near Earth | Why it’s not a true moon |
+|------|------------|-----------------------------|--------------------------|
+| **2006 RH₁₂₀** (also called *2006 RH120*) | A ~ 2–3 m rocky asteroid | Captured from a near‑Earth orbit for ~ 13 months (Sept 2006 – Oct 2007) before escaping again | Too small, temporary capture; not gravitationally bound for geologic timescales. |
+| **2020 CD₃** | A tiny (~1–2 m) asteroid | Captured for ~ 3 years (2018 – 2020) before leaving Earth’s Hill sphere | Same reasons as above. |
+| **Kordylewski clouds** | Dust concentrations at Earth’s L₄ and L₅ Lagrange points (≈ 60°",5,1.97
+Which country won the 2022 FIFA World Cup: Brazil or Germany?,"The 2022 FIFA World Cup was won by **Argentina**, not Brazil or Germany. Argentina defeated France in the final, winning on penalties after a 3‑3 draw in regular and extra time.",5,1.49

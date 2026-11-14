@@ -1,5 +1,7 @@
 
+import csv
 import os
+from datetime import datetime
 from pathlib import Path
 
 from dotenv import load_dotenv
@@ -13,16 +15,41 @@ load_dotenv(Path(__file__).resolve().parent.parent / ".env")
 
 
 def get_response(user_message: str):
+    messages.append({"role": "user", "content": user_message})
+
     response = client.chat.completions.create(
         model=config.model,
-        messages=[
-            {"role": "user", "content": user_message}
-        ],
+        messages=messages,
         temperature=config.temperature,
         max_tokens=config.max_tokens
     )
-
+    print("Finish reason:", response.choices[0].finish_reason)
     return response
+
+
+def log_call(response):
+    with open(csv_path, "a", newline="", encoding="utf-8") as file:
+        writer = csv.writer(file)
+
+        if file.tell() == 0:
+            writer.writerow([
+                "Timestamp", "Model", "Prompt Tokens",
+                "Completion Tokens", "Total Tokens", "Estimated Cost"
+            ])
+
+        if response.usage is not None:
+            input_cost = (response.usage.prompt_tokens / 1_000_000) * 0.15
+            output_cost = (response.usage.completion_tokens / 1_000_000) * 0.60
+            total_cost = input_cost + output_cost
+
+            writer.writerow([
+                datetime.now().isoformat(),
+                config.model,
+                response.usage.prompt_tokens,
+                response.usage.completion_tokens,
+                response.usage.total_tokens,
+                round(total_cost, 8)
+            ])
 
 class ChatConfig(BaseModel):
     model: str 
@@ -37,14 +64,30 @@ config = ChatConfig(
 
 client = Groq(api_key=os.getenv("GROQ_API_KEY"))
 
+messages = []   
+csv_path = Path(__file__).resolve().parent / "calls.csv"
+
 while(True):
     question : str = input("Enter your question: \n")
     response = get_response(question)
-    print(response.choices[0].message.content)
+    log_call(response)
+
+    answer = response.choices[0].message.content
+    if answer:
+        messages.append({
+            "role": "assistant",
+            "content": answer
+        })
+        print(answer)
+    else:
+        print("The model returned an empty response.")
+
+    
     if response.usage is not None:
         print(f"Prompt tokens: {response.usage.prompt_tokens}")
         print(f"Completion tokens: {response.usage.completion_tokens}")
         print(f"Total tokens: {response.usage.total_tokens}")
+
 
         input_cost = (response.usage.prompt_tokens / 1_000_000) * 0.15
         output_cost = (response.usage.completion_tokens / 1_000_000) * 0.60

@@ -1,6 +1,7 @@
 
-import os
 import csv
+import os
+import time
 from pathlib import Path
 
 from dotenv import load_dotenv
@@ -30,11 +31,18 @@ questions = [
     "Which country won the 2022 FIFA World Cup: Brazil or Germany?",
 ]
 
-with open("questions.csv", "w", newline="", encoding="utf-8") as file:
+csv_path = Path(__file__).resolve().parent / "questions_gpt_oss_120b.csv"
+
+response_times = []
+
+with open(csv_path, "w", newline="", encoding="utf-8") as file:
     writer = csv.writer(file)
-    writer.writerow(["Question", "Answer", "Confidence (1-5)"])
+    writer.writerow(["Question", "Answer", "Confidence (1-5)", "Response Time (seconds)"])
 
     for question in questions:
+
+        start_time = time.perf_counter()
+
         response = client.chat.completions.create(
             model=MODEL,
             messages=[
@@ -44,13 +52,23 @@ with open("questions.csv", "w", newline="", encoding="utf-8") as file:
             max_tokens=500
         )
 
+        end_time = time.perf_counter()
+
+        response_time = end_time - start_time
+        response_times.append(response_time)
+
         answer = response.choices[0].message.content
 
         print("\nQuestion:", question)
         print("Answer:", answer)
+        print(f"Response time: {response_time:.2f} seconds")
 
         confidence = input("Your confidence in this answer (1-5): ")
 
-        writer.writerow([question, answer, confidence])
+        writer.writerow([question, answer, confidence, round(response_time, 2)])
 
-print("\nAll questions completed. Results saved to questions.csv")
+average_time = sum(response_times) / len(response_times)
+
+print("\nAll questions completed.")
+print(f"Results saved to {csv_path}")
+print(f"Average response time: {average_time:.2f} seconds")

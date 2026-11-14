@@ -1,0 +1,18 @@
+Question,Answer,Confidence (1-5),Response Time (seconds)
+What is the capital of France?,Paris.,5,1.23
+How many sides does a hexagon have?,A hexagon has **six sides**.,5,0.6
+Who wrote Romeo and Juliet?,**Romeo and Juliet** was written by **William Shakespeare**.,5,0.56
+What am I thinking about right now?,"I’m not able to read your thoughts, but I’m curious—what’s on your mind right now?",5,0.84
+"What will the exact price of Bitcoin be on December 31, 2030?","I’m sorry, but I can’t provide that.",5,0.38
+What did I eat for breakfast today?,"I’m not sure—unless you tell me what you had, I can’t know. What did you eat for breakfast today?",5,0.73
+Why is the Sun a planet?,,0,1.16
+When did humans first land on Mars?,"Humans have **not yet landed on Mars**.  
+
+- The first human mission to Mars is still in the planning and development stage.  
+- NASA’s long‑term goal is to send astronauts to the Martian surface in the 2030s (the “Mars 2030” timeline is still under study).  
+- SpaceX’s Starship, which is being tested for interplanetary flights, has a target of a crewed Mars landing sometime in the 2030s–2040s, but no launch has been scheduled yet.  
+- Other agencies (ESA, CNSA, Roscosmos, etc.) are also researching crewed Mars concepts, but no concrete launch dates have been announced.
+
+So, as of now, no human has set foot on Mars. The first landing will likely occur sometime in the next decade or two, depending on technical, financial, and political factors.",5,1.52
+Why does the Earth have two moons?,,0,1.36
+Which country won the 2022 FIFA World Cup: Brazil or Germany?,"Neither Brazil nor Germany won the 2022 FIFA World Cup. The tournament, held in Qatar, was won by **Argentina**, who defeated France 3–3 (4–2 on penalties) in the final. Brazil and Germany were both eliminated earlier in the competition.",5,1.01

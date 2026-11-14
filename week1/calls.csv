@@ -1,0 +1,3 @@
+Timestamp,Model,Prompt Tokens,Completion Tokens,Total Tokens,Estimated Cost
+2026-11-14T13:11:56.539762,openai/gpt-oss-120b,79,80,159,5.985e-05
+2026-11-14T13:12:32.594579,openai/gpt-oss-120b,138,339,477,0.0002241
