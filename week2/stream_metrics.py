@@ -19,16 +19,17 @@ MODELS = [
 ]
 
 QUESTION = (
-    "Answer in 2 or 3 lines, no more. "
+    "Answer in 6 to 7 or max 10 lines, no more. "
     "What is the difference between AI and machine learning?"
 )
 
 TRIALS = 5
+REQUEST_DELAY = 1
 results = []
 
 
+# METRICS HELPERS
 def get_usage_metrics(usage):
-    """Safely extract usage metrics from Groq's usage object."""
 
     if not usage:
         return {}
@@ -37,8 +38,30 @@ def get_usage_metrics(usage):
         "prompt_tokens": getattr(usage, "prompt_tokens", None),
         "completion_tokens": getattr(usage, "completion_tokens", None),
         "total_tokens": getattr(usage, "total_tokens", None),
-        "completion_time": getattr(usage, "completion_time", None)
+        "prompt_time": getattr(usage, "prompt_time", None),
+        "completion_time": getattr(usage, "completion_time", None),
+        "queue_time": getattr(usage, "queue_time", None),
+        "total_time": getattr(usage, "total_time", None),
     }
+
+
+def get_header_metrics(headers):
+
+    return {
+        "groq_region": headers.get("x-groq-region"),
+        "cf_ray": headers.get("cf-ray"),
+    }
+
+
+def calculate_tps(metrics):
+
+    tokens = metrics.get("completion_tokens")
+    completion_time = metrics.get("completion_time")
+
+    if tokens is not None and completion_time:
+        return tokens / completion_time
+
+    return None
 
 
 # STREAMING
@@ -48,84 +71,123 @@ def model_called_streaming(model, question):
 
         start = time.perf_counter()
 
-        response = client.chat.completions.create(
-            model=model,
-            messages=[{"role": "user", "content": question}],
-            temperature=0.3,
-            reasoning_effort="low",
-            max_completion_tokens=400,
-            stream=True
-        )
-
         full_content = ""
         usage = None
         finish_reason = None
-        first_token_time = None
+        first_content_time = None
         content_chunks = 0
+        chunk_intervals = []
+        previous_chunk_time = None
+        interrupted = False
+        headers = {}
 
-        for chunk in response:
+        try:
+            with client.chat.completions.with_streaming_response.create(
+                model=model,
+                messages=[{"role": "user", "content": question}],
+                temperature=0.3,
+                reasoning_effort="low",
+                max_completion_tokens=1000,
+                stream=True
+            ) as raw_response:
 
-            if chunk.choices:
+                headers = get_header_metrics(raw_response.headers)
 
-                delta = chunk.choices[0].delta
+                for chunk in raw_response.parse():
 
-                if delta.content:
+                    if chunk.choices:
 
-                    if first_token_time is None:
-                        first_token_time = (
-                            time.perf_counter() - start
-                        )
+                        delta = chunk.choices[0].delta
 
-                    content_chunks += 1
-                    full_content += delta.content
+                        if delta.content:
 
-                    print(delta.content, end="", flush=True)
+                            current_time = time.perf_counter()
 
-                if chunk.choices[0].finish_reason:
-                    finish_reason = chunk.choices[0].finish_reason
+                            if first_content_time is None:
+                                first_content_time = current_time - start
 
-            if chunk.x_groq and chunk.x_groq.usage:
-                usage = chunk.x_groq.usage
+                            if previous_chunk_time is not None:
+                                chunk_intervals.append(
+                                    current_time - previous_chunk_time
+                                )
 
-        latency = time.perf_counter() - start
+                            previous_chunk_time = current_time
+                            content_chunks += 1
+                            full_content += delta.content
 
-        metrics = get_usage_metrics(usage)
+                            print(delta.content, end="", flush=True)
 
-        completion_time = metrics.get("completion_time")
+                        if chunk.choices[0].finish_reason:
+                            finish_reason = chunk.choices[0].finish_reason
 
-        tps = (
-            metrics["completion_tokens"] / completion_time
-            if metrics.get("completion_tokens") and completion_time
-            else None
-        )
+                    if chunk.x_groq and chunk.x_groq.usage:
+                        usage = chunk.x_groq.usage
 
-        result = {
-            "model": model,
-            "mode": "streaming",
-            "trial": trial,
-            "ttft": first_token_time,
-            "latency": latency,
-            "content_chunks": content_chunks,
-            "prompt_tokens": metrics.get("prompt_tokens"),
-            "completion_tokens": metrics.get("completion_tokens"),
-            "total_tokens": metrics.get("total_tokens"),
-            "completion_time": completion_time,
-            "tps": tps,
-            "finish_reason": finish_reason,
-            "content": full_content
-        }
+        except KeyboardInterrupt:
+            interrupted = True
+            print("\n\nStreaming interrupted by Ctrl+C.")
 
-        results.append(result)
+        finally:
 
-        print("\n")
-        print(f"Trial: {trial}")
-        print(f"TTFT: {first_token_time}")
-        print(f"Latency: {latency}")
-        print(f"Chunks: {content_chunks}")
-        print(f"Tokens: {metrics}")
-        print(f"TPS: {tps}")
-        print(f"Finish reason: {finish_reason}")
-        print("-" * 60)
+            latency = time.perf_counter() - start
+            metrics = get_usage_metrics(usage)
+
+            completion_time = metrics.get("completion_time")
+            tps = calculate_tps(metrics)
+
+            avg_chunk_latency = (
+                statistics.mean(chunk_intervals) * 1000
+                if chunk_intervals else None
+            )
+
+            result = {
+                "model": model,
+                "mode": "streaming",
+                "trial": trial,
+                "ttft": first_content_time,
+                "latency": latency,
+                "content_chunks": content_chunks,
+                "avg_inter_chunk_latency_ms": avg_chunk_latency,
+
+                "prompt_tokens": metrics.get("prompt_tokens"),
+                "completion_tokens": metrics.get("completion_tokens"),
+                "total_tokens": metrics.get("total_tokens"),
+
+                "prompt_time": metrics.get("prompt_time"),
+                "queue_time": metrics.get("queue_time"),
+                "completion_time": completion_time,
+                "server_total_time": metrics.get("total_time"),
+
+                "tps": tps,
+                "groq_region": headers.get("groq_region"),
+                "cf_ray": headers.get("cf_ray"),
+
+                "finish_reason": finish_reason,
+                "interrupted": interrupted,
+                "content": full_content
+            }
+
+            results.append(result)
+
+            print("\n")
+            print(f"Trial: {trial}")
+            print(f"TTFT: {first_content_time}")
+            print(f"Client latency: {latency:.4f}s")
+            print(f"Content chunks: {content_chunks}")
+            print(f"Average inter-chunk latency: {avg_chunk_latency} ms")
+            print(f"Usage: {metrics}")
+            print(f"Headers: {headers}")
+            print(f"TPS: {tps}")
+            print(f"Interrupted: {interrupted}")
+            print("-" * 60)
+
+        if interrupted:
+            return False
+
+        if trial < TRIALS:
+            time.sleep(REQUEST_DELAY)
+
+    return True
 
 
 # NON-STREAMING
@@ -135,7 +197,7 @@ def model_called_non_streaming(model, question):
 
         start = time.perf_counter()
 
-        response = client.chat.completions.create(
+        raw_response = client.chat.completions.with_raw_response.create(
             model=model,
             messages=[{"role": "user", "content": question}],
             temperature=0.3,
@@ -146,18 +208,14 @@ def model_called_non_streaming(model, question):
 
         latency = time.perf_counter() - start
 
-        usage = response.usage
-        metrics = get_usage_metrics(usage)
+        headers = get_header_metrics(raw_response.headers)
+        response = raw_response.parse()
 
-        completion_time = metrics.get("completion_time")
-
-        tps = (
-            metrics["completion_tokens"] / completion_time
-            if metrics.get("completion_tokens") and completion_time
-            else None
-        )
+        metrics = get_usage_metrics(response.usage)
+        tps = calculate_tps(metrics)
 
         content = response.choices[0].message.content
+        finish_reason = response.choices[0].finish_reason
 
         result = {
             "model": model,
@@ -166,23 +224,38 @@ def model_called_non_streaming(model, question):
             "ttft": None,
             "latency": latency,
             "content_chunks": None,
+            "avg_inter_chunk_latency_ms": None,
+
             "prompt_tokens": metrics.get("prompt_tokens"),
             "completion_tokens": metrics.get("completion_tokens"),
             "total_tokens": metrics.get("total_tokens"),
-            "completion_time": completion_time,
+
+            "prompt_time": metrics.get("prompt_time"),
+            "queue_time": metrics.get("queue_time"),
+            "completion_time": metrics.get("completion_time"),
+            "server_total_time": metrics.get("total_time"),
+
             "tps": tps,
-            "finish_reason": response.choices[0].finish_reason,
+            "groq_region": headers.get("groq_region"),
+            "cf_ray": headers.get("cf_ray"),
+
+            "finish_reason": finish_reason,
+            "interrupted": False,
             "content": content
         }
 
         results.append(result)
 
         print(f"\nTrial: {trial}")
-        print(f"Latency: {latency}")
+        print(f"Client latency: {latency:.4f}s")
         print(f"Content: {content}")
         print(f"Usage: {metrics}")
+        print(f"Headers: {headers}")
         print(f"TPS: {tps}")
         print("-" * 60)
+
+        if trial < TRIALS:
+            time.sleep(REQUEST_DELAY)
 
 
 # SAVE RESULTS TO CSV
@@ -191,10 +264,18 @@ def save_results():
     output_path = Path(__file__).parent / "benchmark_results.csv"
 
     fields = [
-        "model", "mode", "trial", "ttft", "latency",
-        "content_chunks", "prompt_tokens", "completion_tokens",
-        "total_tokens", "completion_time", "tps",
-        "finish_reason", "content"
+        "model", "mode", "trial",
+        "ttft", "latency",
+        "content_chunks", "avg_inter_chunk_latency_ms",
+
+        "prompt_tokens", "completion_tokens", "total_tokens",
+
+        "prompt_time", "queue_time",
+        "completion_time", "server_total_time",
+
+        "tps", "groq_region", "cf_ray",
+
+        "finish_reason", "interrupted", "content"
     ]
 
     with open(output_path, "w", newline="", encoding="utf-8") as file:
@@ -212,13 +293,27 @@ def calculate_averages():
     print("\n\nFINAL BENCHMARK SUMMARY")
     print("=" * 75)
 
+    metrics_to_average = [
+        "ttft",
+        "latency",
+        "queue_time",
+        "prompt_time",
+        "completion_time",
+        "server_total_time",
+        "completion_tokens",
+        "tps",
+        "avg_inter_chunk_latency_ms"
+    ]
+
     for model in MODELS:
 
         for mode in ["streaming", "non-streaming"]:
 
             trials = [
                 r for r in results
-                if r["model"] == model and r["mode"] == mode
+                if r["model"] == model
+                and r["mode"] == mode
+                and not r["interrupted"]
             ]
 
             if not trials:
@@ -227,16 +322,11 @@ def calculate_averages():
             print(f"\nModel: {model}")
             print(f"Mode: {mode}")
 
-            metrics = [
-                "ttft", "latency", "completion_tokens",
-                "completion_time", "tps"
-            ]
-
-            for metric in metrics:
+            for metric in metrics_to_average:
 
                 values = [
                     r[metric] for r in trials
-                    if r[metric] is not None
+                    if r.get(metric) is not None
                 ]
 
                 if values:
@@ -245,7 +335,7 @@ def calculate_averages():
                         f"{statistics.mean(values):.4f}"
                     )
 
-            print(f"Trials: {len(trials)}")
+            print(f"Completed trials: {len(trials)}")
 
     print("\n" + "=" * 75)
 
@@ -253,13 +343,38 @@ def calculate_averages():
 # EXECUTION
 if __name__ == "__main__":
 
-    for model in MODELS:
+    try:
 
-        print(f"\n\nSTREAMING: {model}")
-        model_called_streaming(model, QUESTION)
+        # First: streaming for all models
+        for model in MODELS:
 
-        print(f"\n\nNON-STREAMING: {model}")
-        model_called_non_streaming(model, QUESTION)
+            print(f"\n\nSTREAMING: {model}")
 
-    save_results()
-    calculate_averages()
+            completed = model_called_streaming(model, QUESTION)
+
+            if not completed:
+                break
+
+            time.sleep(REQUEST_DELAY)
+
+        else:
+
+            # Second: non-streaming for all models
+            for model in MODELS:
+
+                print(f"\n\nNON-STREAMING: {model}")
+
+                model_called_non_streaming(model, QUESTION)
+
+                time.sleep(REQUEST_DELAY)
+
+    except KeyboardInterrupt:
+        print("\nBenchmark interrupted by Ctrl+C.")
+
+    finally:
+
+        if results:
+            save_results()
+            calculate_averages()
+        else:
+            print("No benchmark results to save.")
