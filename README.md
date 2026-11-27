@@ -97,6 +97,7 @@ A few principles guide this journey:
 Each week's work is organized in its own directory, with a README documenting the experiments, implementations, and results.
 
 - [Week 1 — Foundations & LLM Experiments](./week1/README.md)
+- [Week 2 — LLM APIs, Open Models & Streaming](./week2/README.md)
 
 More weekly documentation and projects will be added as the journey progresses.
 
